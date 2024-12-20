@@ -10,4 +10,5 @@ void nvs_init(void)
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
+    esp_get_free_heap_size();
 }

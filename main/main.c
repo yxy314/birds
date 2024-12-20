@@ -31,7 +31,7 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "key.h"
-#include "platform.h"
+#include "HardwareManager.h"
 
 
 /**
@@ -41,17 +41,8 @@
  */
 void app_main(void)
 {
-    // esp_err_t ret;
-    // ret = nvs_flash_init(); /* 初始化NVS */
-
-    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
-    // {
-    //     ESP_ERROR_CHECK(nvs_flash_erase());
-    //     ret = nvs_flash_init();
-    // }
-
-    platform_init(); /* 平台初始化 */
-
+    vSystemHardwareDriverInit(); /* 平台初始化 */
+    
     lcd_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
     lcd_show_string(0, 40, 240, 24, 24, "WiFi Aliyun Test", RED);
     lcd_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);

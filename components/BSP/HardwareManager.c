@@ -1,6 +1,6 @@
-#include "platform.h"
+#include "HardwareManager.h"
 i2c_obj_t i2c0_master;
-void platform_init(void)
+void vSystemHardwareDriverInit(void)
 {
     led_init();                        /* 初始化LED */
     key_init();                        /* 初始化按键 */

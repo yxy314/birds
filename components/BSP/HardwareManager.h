@@ -1,5 +1,5 @@
-#ifndef __PLATFORM_H_
-#define __PLATFORM_H_
+#ifndef __HARDWAREMANAGE_H
+#define __HARDWAREMANAGE_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +9,6 @@
 #include "key.h"
 #include "nvs.h"
 
-void platform_init(void);
+void vSystemHardwareDriverInit(void);
 
 #endif
