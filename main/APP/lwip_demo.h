@@ -41,22 +41,24 @@
 #include "esp_netif.h"
 #include "led.h"
 #include "lcd.h"
+#include "applicationmusic.h"
 
 
 /* 用户需要根据设备信息完善以下宏定义中的三元组内容 */
-#define PRODUCT_KEY         "k21tgErLS9c"                                                       /* ProductKey->阿里云颁发的产品唯一标识，11位长度的英文数字随机组合 */
-#define DEVICE_NAME         "hVaXeunFQtawryJewR3y"                                              /* DeviceName->用户注册设备时生成的设备唯一编号，支持系统自动生成，也可支持用户添加自定义编号，产品维度内唯一  */
-#define DEVICE_SECRET       "60813eb6d895bc23788f1d3321618a89"                                  /* DeviceSecret->设备密钥，与DeviceName成对出现，可用于一机一密的认证方案  */
+#define PRODUCT_KEY         "k21tgolZOtg"                                                       /* ProductKey->阿里云颁发的产品唯一标识，11位长度的英文数字随机组合 */
+#define DEVICE_NAME         "dididi"                                              /* DeviceName->用户注册设备时生成的设备唯一编号，支持系统自动生成，也可支持用户添加自定义编号，产品维度内唯一  */
+#define DEVICE_SECRET       "63c1b01b418d4c2fb10769c00ddc46d0"                                  /* DeviceSecret->设备密钥，与DeviceName成对出现，可用于一机一密的认证方案  */
 /* MQTT地址与端口 */
 #define HOST_NAME           "iot-06z00aav9e910cb.mqtt.iothub.aliyuncs.com"                  /* 阿里云域名 */
 #define HOST_PORT           1883                                                                /* 阿里云域名端口，固定1883 */
 /* 根据三元组内容计算得出的数值 */
-#define CLIENT_ID           "k21tgErLS9c.hVaXeunFQtawryJewR3y|securemode=2,signmethod=hmacsha256,timestamp=1733316316467|"  /* 客户端ID */
+#define CLIENT_ID           "k21tgolZOtg.dididi|securemode=2,signmethod=hmacsha256,timestamp=1735122986988|"  /* 客户端ID */
 #define USER_NAME           DEVICE_NAME"&"PRODUCT_KEY                                           /* 客户端用户名 */
-#define PASSWORD            "b6ba57372a856773cfb1905f3ed204ef406ca6d4132803cb8e54ba0db6257497"                          /* 由MQTT_Password工具计算得出的连接密码 */
+#define PASSWORD            "166e79529dd8ed19b77fb94fcd3f6594c78a9dcaf567de95a0c910d6fb9b58f0"                          /* 由MQTT_Password工具计算得出的连接密码 */
 /* 发布与订阅 */
 #define DEVICE_PUBLISH      "/"PRODUCT_KEY"/"DEVICE_NAME"/user/update"                          /* 发布 */
 #define DEVICE_SUBSCRIBE    "/"PRODUCT_KEY"/"DEVICE_NAME"/user/get"                             /* 订阅 */
+#define DEVICE_SUBSCRIBE2   "/"PRODUCT_KEY"/"DEVICE_NAME"/user/bothway"                         /* 订阅 */
 
 void lwip_demo(void);
 
