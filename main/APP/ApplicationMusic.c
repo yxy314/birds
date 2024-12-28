@@ -11,7 +11,8 @@ void vMusicPlayTask(void *P)
          */
         BaseType_t notifiedValue = 0;
         xTaskNotifyWait(0, 0, &notifiedValue, 0); // 获取通知值
-        //notifiedValue = ulTaskNotifyTake(pdFALSE, 1);
+        /* 使用这个函数只能对通知值减一或清零操作 */
+        //notifiedValue = ulTaskNotifyTake(pdFALSE, portMAX_DELAY);
         if (notifiedValue) /* 阻塞等待，只有接收到通知才会开始判断和执行 */
         {
             LED_TOGGLE();

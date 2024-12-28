@@ -89,18 +89,23 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
         break;
     case MQTT_EVENT_DATA: /* 接收数据事件 */
-        printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
-        printf("DATA=%.*s\r\n", event->data_len, event->data);
+
         if (atoi(event->data) == 1)
         {
-            xTaskNotify(xMusicPlayTaskHandle,1,eSetValueWithOverwrite);
+            printf("1%d\n",atoi(event->data));
+            printf("111TOPIC=%.*s\r\n", event->topic_len, event->topic);
+            printf("DATA=%.*s\r\n", event->data_len, event->data);
+            xTaskNotify(xMusicPlayTaskHandle, 1, eSetValueWithOverwrite);
         }
         else if (atoi(event->data) == 0)
         {
-            xTaskNotify(xMusicPlayTaskHandle,0,eSetValueWithOverwrite);
+            printf("0%d\n",atoi(event->data));
+            printf("000TOPIC=%.*s\r\n", event->topic_len, event->topic);
+            printf("DATA=%.*s\r\n", event->data_len, event->data);
+            xTaskNotify(xMusicPlayTaskHandle, 0, eSetValueWithOverwrite);
         }
 
-            break;
+        break;
     case MQTT_EVENT_ERROR:
 
         if (event->error_handle->error_type == MQTT_ERROR_TYPE_TCP_TRANSPORT)
