@@ -2,7 +2,6 @@
 TaskHandle_t xMusicPlayTaskHandle = NULL;
 void vMusicPlayTask(void *P)
 {
-    uint16_t i = 0;
     while (1)
     {
         /* 在这里只要没有通知音乐播放和暂停都不会执行，就阻塞在等待消息通知的位置
@@ -15,17 +14,14 @@ void vMusicPlayTask(void *P)
         //notifiedValue = ulTaskNotifyTake(pdFALSE, portMAX_DELAY);
         if (notifiedValue) /* 阻塞等待，只有接收到通知才会开始判断和执行 */
         {
-            LED_TOGGLE();
-            ESP_LOGI("MUSIC", "音乐播放%d", i++);
-            ESP_LOGI("MUSIC", "播放: %u", notifiedValue);
+            LED(0);
+            ESP_LOGI("MUSIC", "音乐播放");
         }
         else /* 音乐暂停 */
         {
-            ESP_LOGI("MUSIC", "暂停: %u", notifiedValue);
-            LED_TOGGLE();
-            ESP_LOGI("MUSIC", "音乐暂停%d", i++);
+            LED(1);
+            ESP_LOGI("MUSIC", "音乐暂停");
         }
-
         vTaskDelay(1000);
     }
 }
