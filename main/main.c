@@ -32,7 +32,7 @@
 #include "freertos/event_groups.h"
 #include "key.h"
 #include "HardwareManager.h"
-#include "applicationmusic.h"
+#include "TaskManage.h"
 
 /**
  * @brief       程序入口
@@ -41,12 +41,11 @@
  */
 void app_main(void)
 {
-    vSystemHardwareDriverInit(); /* 平台初始化 */
-    xTaskCreatePinnedToCore(vMusicPlayTask, "MusicPlay", 2048, NULL, 5, &xMusicPlayTaskHandle, 0);
+    vSystemHardwareDriverInit(); /* 硬件初始化 */
+    vTaskCreateFunction();       /* 任务初始化创建 */
+    wifi_sta_init();             /* 网络配置 */
+    lwip_demo();                 /* lwip测试代码 */
     lcd_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
     lcd_show_string(0, 40, 240, 24, 24, "WiFi Aliyun Test", RED);
     lcd_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);
-    wifi_sta_init(); /* 网络配置 */
-    lwip_demo();     /* lwip测试代码 */
-
 }

@@ -159,7 +159,6 @@ void wifi_sta_init(void)
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start());
-
     /* 等待链接成功后、ip生成 */
     EventBits_t bits = xEventGroupWaitBits( wifi_event,
                                             WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
