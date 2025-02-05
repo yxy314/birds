@@ -8,7 +8,11 @@
 #include "lcd.h"
 #include "key.h"
 #include "nvs.h"
-
+#include "es8388.h"
+#include "xl9555.h"
+#include "i2s.h"
+#include "spi.h"
+#include "iic.h"
 void vSystemHardwareDriverInit(void);
 
 #endif

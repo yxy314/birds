@@ -6,7 +6,10 @@ set(src_dirs
             LED
             SPI
             XL9555
-            nvs)
+            nvs
+            sdio
+            i2s
+            es8388)
 
 set(include_dirs
             .
@@ -16,11 +19,15 @@ set(include_dirs
             LED
             SPI
             XL9555
-            nvs)
+            nvs
+            sdio
+            i2s
+            es8388)
 
 set(requires
             driver
-            nvs_flash)
+            nvs_flash
+            fatfs)
 
 idf_component_register(SRC_DIRS ${src_dirs} INCLUDE_DIRS ${include_dirs} REQUIRES ${requires})
                         #这里               #和这里 都是将这里函数声明出去  #这里添加依赖，添加那些没有被声明出去的函数

@@ -23,8 +23,10 @@
 
 /* 链接wifi名称 */
 #define DEFAULT_SSID        "dididi"
+//#define DEFAULT_SSID        "301"
 /* wifi密码 */
 #define DEFAULT_PWD         "1233211234567"
+//#define DEFAULT_PWD         "17312856862"
 /* 事件标志 */
 static EventGroupHandle_t   wifi_event;
 #define WIFI_CONNECTED_BIT  BIT0
@@ -164,7 +166,7 @@ void wifi_sta_init(void)
                                             WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
                                             pdFALSE,
                                             pdFALSE,
-                                            portMAX_DELAY);
+                                            portMAX_DELAY); 
 
     /* 判断连接事件 */
     if (bits & WIFI_CONNECTED_BIT)

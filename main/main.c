@@ -33,7 +33,7 @@
 #include "key.h"
 #include "HardwareManager.h"
 #include "TaskManage.h"
-
+#include "spi_sdcard.h"
 /**
  * @brief       程序入口
  * @param       无
@@ -41,10 +41,51 @@
  */
 void app_main(void)
 {
+    esp_err_t ret;
+    uint8_t key = 0;
     vSystemHardwareDriverInit(); /* 硬件初始化 */
-    vTaskCreateFunction();       /* 任务初始化创建 */
-    wifi_sta_init();             /* 网络配置 */
-    lwip_demo();                 /* lwip测试代码 */
+
+    /* 分割线 */
+    while (sd_spi_init()) /* 检测不到SD卡 */
+    {
+        lcd_show_string(30, 110, 200, 16, 16, "SD Card Error!", RED);
+        vTaskDelay(500);
+        lcd_show_string(30, 130, 200, 16, 16, "Please Check! ", RED);
+        vTaskDelay(500);
+    }
+
+    while (fonts_init()) /* 检查字库 */
+    {
+        lcd_clear(WHITE); /* 清屏 */
+        lcd_show_string(30, 30, 200, 16, 16, "ESP32-S3", RED);
+
+        key = fonts_update_font(30, 50, 16, (uint8_t *)"0:", RED); /* 更新字库 */
+
+        while (key) /* 更新失败 */
+        {
+            lcd_show_string(30, 50, 200, 16, 16, "Font Update Failed!", RED);
+            vTaskDelay(200);
+            lcd_fill(20, 50, 200 + 20, 90 + 16, WHITE);
+            vTaskDelay(200);
+        }
+
+        lcd_show_string(30, 50, 200, 16, 16, "Font Update Success!   ", RED);
+        vTaskDelay(1500);
+        lcd_clear(WHITE); /* 清屏 */
+    }
+
+    ret = exfuns_init(); /* 为fatfs相关变量申请内存 */
+    // vTaskDelay(500);     /* 实验信息显示延时 */
+    // text_show_string(30, 50, 200, 16, "正点原子ESP32开发板", 16, 0, RED);
+    // text_show_string(30, 70, 200, 16, "音乐播放器 实验", 16, 0, RED);
+    // text_show_string(30, 90, 200, 16, "正点原子@ALIENTEK", 16, 0, RED);
+    // text_show_string(30, 110, 200, 16, "KEY0:NEXT   KEY2:PREV", 16, 0, RED);
+    // text_show_string(30, 130, 200, 16, "KEY3:PAUSE/PLAY", 16, 0, RED);
+
+    /* 分割线 */
+    vTaskCreateFunction(); /* 任务初始化创建 */
+    wifi_sta_init();       /* 网络配置 */
+    lwip_demo();           /* lwip测试代码 */
     lcd_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
     lcd_show_string(0, 40, 240, 24, 24, "WiFi Aliyun Test", RED);
     lcd_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);

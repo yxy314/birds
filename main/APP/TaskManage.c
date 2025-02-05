@@ -17,7 +17,7 @@
 *******************************************************************************/
 void vTaskCreateFunction(void)
 {   
-    xTaskCreatePinnedToCore(vMusicPlayTask, "MusicPlay", 2048, NULL, 5, &xMusicPlayTaskHandle, 0);
+    xTaskCreatePinnedToCore(vMusicPlayTask, "MusicPlay", 4096, NULL, 5, &xMusicPlayTaskHandle, 0);
     // xTaskCreate( vADCDataProcessingTask,  "vADCDataProcessingTask",  310, 0, 1,&HandleADCDataProcessing);//adc数据处理任务优先级1
     // xTaskCreate( vGarbage_box_check_task, "vGarbage_box_check_task", 310, 0, 1,0);//垃圾盒检测任务 优先级1
     // xTaskCreate( vGyroscopse_task,        "vGyroscopse_task",        310, 0, 2,0);//陀螺仪任务     优先级2
