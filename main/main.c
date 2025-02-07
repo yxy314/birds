@@ -53,7 +53,7 @@ void app_main(void)
         lcd_show_string(30, 130, 200, 16, 16, "Please Check! ", RED);
         vTaskDelay(500);
     }
-
+    //printf("%d\n", 1);
     while (fonts_init()) /* 检查字库 */
     {
         lcd_clear(WHITE); /* 清屏 */
@@ -73,20 +73,14 @@ void app_main(void)
         vTaskDelay(1500);
         lcd_clear(WHITE); /* 清屏 */
     }
+    //printf("%d\n", 2);
+    vTaskCreateFunction(); /* 任务初始化创建 */
+    // wifi_sta_init();       /* 网络配置 */
+    // lwip_demo();           /* lwip测试代码 */
+    //  lcd_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
+    //  lcd_show_string(0, 40, 240, 24, 24, "WiFi Aliyun Test", RED);
+    //  lcd_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);
 
     ret = exfuns_init(); /* 为fatfs相关变量申请内存 */
-    // vTaskDelay(500);     /* 实验信息显示延时 */
-    // text_show_string(30, 50, 200, 16, "正点原子ESP32开发板", 16, 0, RED);
-    // text_show_string(30, 70, 200, 16, "音乐播放器 实验", 16, 0, RED);
-    // text_show_string(30, 90, 200, 16, "正点原子@ALIENTEK", 16, 0, RED);
-    // text_show_string(30, 110, 200, 16, "KEY0:NEXT   KEY2:PREV", 16, 0, RED);
-    // text_show_string(30, 130, 200, 16, "KEY3:PAUSE/PLAY", 16, 0, RED);
-
-    /* 分割线 */
-    vTaskCreateFunction(); /* 任务初始化创建 */
-    wifi_sta_init();       /* 网络配置 */
-    lwip_demo();           /* lwip测试代码 */
-    lcd_show_string(0, 0, 240, 32, 32, "ESP32-S3", RED);
-    lcd_show_string(0, 40, 240, 24, 24, "WiFi Aliyun Test", RED);
-    lcd_show_string(0, 70, 240, 16, 16, "ATOM@ALIENTEK", RED);
+    printf("ret = %d\n", ret);
 }

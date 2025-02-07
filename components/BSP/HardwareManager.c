@@ -13,8 +13,8 @@ void vSystemHardwareDriverInit(void)
     es8388_adda_cfg(1, 0);    /* 开启DAC关闭ADC */
     es8388_input_cfg(0);
     es8388_output_cfg(1, 1);        /* DAC选择通道输出 */
-    es8388_hpvol_set(20);           /* 设置耳机音量 */
-    es8388_spkvol_set(20);          /* 设置喇叭音量 */
+    es8388_hpvol_set(0);           /* 设置耳机音量 */
+    es8388_spkvol_set(0);          /* 设置喇叭音量 */
     xl9555_pin_write(SPK_EN_IO, 0); /* 打开喇叭 */
     i2s_init();                     /* I2S初始化 */
 }

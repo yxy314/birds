@@ -1,6 +1,26 @@
 #include "applicationmusic.h"
 TaskHandle_t xMusicPlayTaskHandle = NULL;
 __audiodev g_audiodev; /* 音乐播放控制器 */
+#include "esp_heap_caps.h"
+
+void print_memory_info()
+{
+    // 获取内部 RAM 的总大小和可用大小
+    size_t total_internal = heap_caps_get_total_size(MALLOC_CAP_INTERNAL);
+    size_t free_internal = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
+
+    // 获取外部 PSRAM 的总大小和可用大小（如果支持）
+    size_t total_psram = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
+    size_t free_psram = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
+
+    printf("Internal RAM:\n");
+    printf("  Total: %d bytes\n", total_internal);
+    printf("  Free: %d bytes\n", free_internal);
+
+    printf("PSRAM:\n");
+    printf("  Total: %d bytes\n", total_psram);
+    printf("  Free: %d bytes\n", free_psram);
+}
 void vMusicPlayTask(void *P)
 {
     while (1)
@@ -17,14 +37,15 @@ void vMusicPlayTask(void *P)
         {
             LED(0);
             ESP_LOGI("MUSIC", "音乐播放");
-                }
+        }
         else /* 音乐暂停 */
         {
             LED(1);
             audio_play();
             ESP_LOGI("MUSIC", "音乐暂停");
+            print_memory_info();
         }
-        vTaskDelay(1000);
+        vTaskDelay(500);
     }
 }
 
