@@ -38,7 +38,7 @@ static const char *FILE_TYPE_TBL[FILE_MAX_TYPE_NUM][FILE_MAX_SUBT_NUM] = {
 /* 公共文件区, 使用malloc的时候 */
 
 /* 逻辑磁盘工作区(在调用任何FATFS相关函数之前,必须先给fs申请内存) */
-FATFS *fs[FF_VOLUMES];  
+FATFS *fs[FF_VOLUMES];
 
 /******************************************************************************************/
 
@@ -54,32 +54,24 @@ uint8_t exfuns_init(void)
 
     for (i = 0; i < FF_VOLUMES; i++)
     {
-        fs[i] = (FATFS *)malloc(sizeof(FATFS));   /* 为磁盘i工作区申请内存 */
+        /* 使用第二种内存申请方式，如果使用malloc低于阈值仍会在内部存储器中申请，
+         * 使用heap_caps_malloc直接指定在PSRAM中申请内存，避免内存不足的情况
+         */
+        // fs[i] = (FATFS *)malloc(sizeof(FATFS));   /* 为磁盘i工作区申请内存 */
+        fs[i] = (FATFS *)heap_caps_malloc(sizeof(FATFS), MALLOC_CAP_8BIT);
 
-        if (!fs[i])break;
+        if (!fs[i])
+            break;
     }
 
-    // if (i == FF_VOLUMES && res == 0)
-    // {
-    //     return 0;   /* 申请有一个失败,即失败. */
-    // }
-    // else
-    // {
-    //     return 1;
-    // }
-    size_t size_in_bytes = 4 * 1024 * 1024; // 4MB 转换成字节
-    void *ptr = malloc(size_in_bytes);      // 尝试分配4MB内存
-
-    if (ptr == NULL)
-    { // 检查是否分配成功
-        printf("内存分配失败\n");
-        return 0;
+    if (i == FF_VOLUMES && res == 0)
+    {
+        return 0; /* 申请有一个失败,即失败. */
     }
-
-    // 在这里可以对这块内存进行操作
-
-    printf("成功分配了4MB内存\n");
-    return 1;
+    else
+    {
+        return 1;
+    }
 }
 
 /**
@@ -560,4 +552,27 @@ uint8_t exfuns_folder_copy(uint8_t (*fcpymsg)(uint8_t *pname, uint8_t pct, uint8
     free(dstdir);
     free(finfo);
     return res;
+}
+/*
+ * @brief       获取内存信息
+ * @param       无
+ * @retval      无
+ */
+void print_memory_info()
+{
+    // 获取内部 RAM 的总大小和可用大小
+    size_t total_internal = heap_caps_get_total_size(MALLOC_CAP_INTERNAL);
+    size_t free_internal = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
+
+    // 获取外部 PSRAM 的总大小和可用大小（如果支持）
+    size_t total_psram = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
+    size_t free_psram = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
+
+    printf("Internal RAM:\n");
+    printf("  Total: %d bytes\n", total_internal);
+    printf("  Free: %d bytes\n", free_internal);
+
+    printf("PSRAM:\n");
+    printf("  Total: %d bytes\n", total_psram);
+    printf("  Free: %d bytes\n", free_psram);
 }

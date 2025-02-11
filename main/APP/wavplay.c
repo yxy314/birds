@@ -113,6 +113,7 @@ uint8_t wav_decode_init(uint8_t *fname, __wavctrl *wavx)
                     printf("wavx->bps:%d\r\n", wavx->bps);
                     printf("wavx->datasize:%ld\r\n", wavx->datasize);
                     printf("wavx->datastart:%ld\r\n", wavx->datastart);  
+                    print_memory_info(); /* 打印内存信息 */
                 }
                 else
                 {

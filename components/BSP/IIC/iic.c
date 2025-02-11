@@ -91,6 +91,12 @@ i2c_obj_t iic_init(uint8_t iic_port)
  * @param       bufs：要发送的数据或者是读取的存储区
  * @param       flags：读写标志位
  * @retval      无
+ * @note        以XL9555为例,在XL9555中,有两个函数,一个是写入函数,一个是读取函数,这两个函数都是通过IIC传输数据的
+ *              1.当为写入函数时，先写设备地址+写xl955寄存器地址，再往寄存器写数据。使用标志位是I2C_FLAG_STOP
+ *                所以第一个if可以略过，直接写设备地址，找到设备后，写寄存器地址和数据（写寄存器和写数据从通讯上来看是一样的）
+ *                所以需要先写，再停止
+ *              2.当为读取函数时，先写设备地址（写命令）+写xl955寄存器地址（告诉芯片我要读哪个寄存器），再写设备地址（发送读命令），再读数据。
+ *                所以需要先写，再读，再停止
  */
 esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs, unsigned int flags)
 {
@@ -113,7 +119,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     i2c_master_start(cmd);                                                                              /* 启动位 */
     i2c_master_write_byte(cmd, addr << 1 | (flags & I2C_FLAG_READ), ACK_CHECK_EN);                      /* 从机地址 + 读/写操作位 */
 
-    for (; n--; ++bufs)
+    for (; n--; ++bufs)/* 这里++bufs是在for循环之后才开始执行，所以不会溢出 */
     {
         if (flags & I2C_FLAG_READ)
         {

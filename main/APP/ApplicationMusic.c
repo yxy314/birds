@@ -3,24 +3,6 @@ TaskHandle_t xMusicPlayTaskHandle = NULL;
 __audiodev g_audiodev; /* 音乐播放控制器 */
 #include "esp_heap_caps.h"
 
-void print_memory_info()
-{
-    // 获取内部 RAM 的总大小和可用大小
-    size_t total_internal = heap_caps_get_total_size(MALLOC_CAP_INTERNAL);
-    size_t free_internal = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
-
-    // 获取外部 PSRAM 的总大小和可用大小（如果支持）
-    size_t total_psram = heap_caps_get_total_size(MALLOC_CAP_SPIRAM);
-    size_t free_psram = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
-
-    printf("Internal RAM:\n");
-    printf("  Total: %d bytes\n", total_internal);
-    printf("  Free: %d bytes\n", free_internal);
-
-    printf("PSRAM:\n");
-    printf("  Total: %d bytes\n", total_psram);
-    printf("  Free: %d bytes\n", free_psram);
-}
 void vMusicPlayTask(void *P)
 {
     while (1)
@@ -36,14 +18,13 @@ void vMusicPlayTask(void *P)
         if (notifiedValue) /* 阻塞等待，只有接收到通知才会开始判断和执行 */
         {
             LED(0);
+            audio_play();
             ESP_LOGI("MUSIC", "音乐播放");
         }
         else /* 音乐暂停 */
         {
             LED(1);
-            audio_play();
             ESP_LOGI("MUSIC", "音乐暂停");
-            print_memory_info();
         }
         vTaskDelay(500);
     }
@@ -174,7 +155,7 @@ void audio_play(void)
     uint8_t key;          /* 键值 */
     uint32_t temp;
     uint32_t *wavoffsettbl; /* 音乐offset索引表 */
-
+    print_memory_info(); /* 打印内存信息 */
     es8388_adda_cfg(1, 0);   /* 开启DAC关闭ADC */
     es8388_output_cfg(1, 1); /* DAC选择通道1输出 */
 
@@ -182,7 +163,7 @@ void audio_play(void)
     {
         text_show_string(30, 190, 240, 16, "MUSIC文件夹错误!", 16, 0, BLUE);
         vTaskDelay(200);
-        lcd_fill(30, 190, 240, 206, WHITE); /* 清除显示 */
+        lcd_fill(30, 190, 240, 206, WHITE); /* 清除显示 */ 
         vTaskDelay(200);
     }
 
@@ -258,6 +239,7 @@ void audio_play(void)
 
         if (key == KEY2_PRES) /* 上一曲 */
         {
+
             if (curindex)
             {
                 curindex--;

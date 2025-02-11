@@ -65,7 +65,7 @@ uint32_t exfuns_get_folder_size(uint8_t *fdname);       /* 得到文件夹大小
 uint8_t *exfuns_get_src_dname(uint8_t *dpfn);
 uint8_t exfuns_file_copy(uint8_t(*fcpymsg)(uint8_t *pname, uint8_t pct, uint8_t mode), uint8_t *psrc, uint8_t *pdst, uint32_t totsize, uint32_t cpdsize, uint8_t fwmode);       /* 文件复制 */
 uint8_t exfuns_folder_copy(uint8_t(*fcpymsg)(uint8_t *pname, uint8_t pct, uint8_t mode), uint8_t *psrc, uint8_t *pdst, uint32_t *totsize, uint32_t *cpdsize, uint8_t fwmode);   /* 文件夹复制 */
-
+void print_memory_info();                               /* 打印内存信息 */
 #endif
 
 

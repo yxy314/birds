@@ -63,6 +63,7 @@ esp_err_t sd_spi_init(void)
     };
 
     /* SD卡参数配置 */
+    /* 取函数指针host.init = &sdspi_host_init;和host.init = sdspi_host_init; 效果是类似的。推荐使用第一种*/
     sdmmc_host_t host = {0};
     host.flags = SDMMC_HOST_FLAG_SPI | SDMMC_HOST_FLAG_DEINIT_ARG;  /* 定义主机属性的标志：SPI协议且可调用deinit函数 */
     host.slot = SPI2_HOST;                                          /* 使用SPI2端口 */
@@ -109,12 +110,25 @@ void sd_get_fatfs_usage(size_t *out_total_bytes, size_t *out_free_bytes)
     FATFS *fs;
     size_t free_clusters;
     int res = f_getfree("0:", (size_t *)&free_clusters, &fs);
-    assert(res == FR_OK);
+    assert(res == FR_OK);/* 如果不满足括号内条件则函数终止 */
+
+    // 计算总扇区数：
+    // fs->n_fatent: 文件系统中的簇数量加2，因为FAT表中第0和第1项保留，
+    // fs->csize: 每个簇包含的扇区数。
+    // 因此，总扇区数 = (簇总数 - 2) * 每簇的扇区数
     size_t total_sectors = (fs->n_fatent - 2) * fs->csize;
+
+    // 计算空闲扇区数：
+    // 空闲扇区数 = 空闲簇数量 * 每簇的扇区数
     size_t free_sectors = free_clusters * fs->csize;
 
+    // 计算SD卡的总大小：
+    // 先将总扇区数除以1024，得到扇区数量的一个中间值，再乘以每扇区的字节数(fs->ssize)
     size_t sd_total = total_sectors / 1024;
     size_t sd_total_KB = sd_total * fs->ssize;
+    
+    // 计算SD卡的剩余空间：
+    // 同样先将空闲扇区数除以1024，再乘以每扇区的字节数，得到单位为字节的结果
     size_t sd_free = free_sectors / 1024;
     size_t sd_free_KB = sd_free*fs->ssize;
 

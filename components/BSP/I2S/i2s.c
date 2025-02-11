@@ -20,19 +20,17 @@
 
 #include "i2s.h"
 
-
 /* I2S默认配置 */
-#define I2S_CONFIG_DEFAULT() { \
-    .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),      \
-    .sample_rate = SAMPLE_RATE,                                             \
-    .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,                           \
-    .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,                           \
-    .communication_format = I2S_COMM_FORMAT_STAND_I2S,                      \
-    .intr_alloc_flags = 0,                                                  \
-    .dma_buf_count = 8,                                                     \
-    .dma_buf_len = 256,                                                     \
-    .use_apll = false                                                       \
-}
+#define I2S_CONFIG_DEFAULT() {                                         \
+    .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX), \
+    .sample_rate = SAMPLE_RATE,                                        \
+    .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,                      \
+    .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,                      \
+    .communication_format = I2S_COMM_FORMAT_STAND_I2S,                 \
+    .intr_alloc_flags = 0,                                             \
+    .dma_buf_count = 8,                                                \
+    .dma_buf_len = 256,                                                \
+    .use_apll = false}
 
 /**
  * @brief       初始化I2S
@@ -50,14 +48,14 @@ esp_err_t i2s_init(void)
         .data_in_num = I2S_DI_IO,
         .mck_io_num = IS2_MCLK_IO,
     };
-    
+
     i2s_config_t i2s_config = I2S_CONFIG_DEFAULT();
     i2s_config.sample_rate = SAMPLE_RATE;
     i2s_config.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT;
     i2s_config.use_apll = true;
     ret_val |= i2s_driver_install(I2S_NUM, &i2s_config, 0, NULL);
     ret_val |= i2s_set_pin(I2S_NUM, &pin_config);
-    ret_val |= i2s_zero_dma_buffer(I2S_NUM);
+    ret_val |= i2s_zero_dma_buffer(I2S_NUM); /* 清零DMA缓冲区 */
     return ret_val;
 }
 
@@ -97,9 +95,9 @@ void i2s_deinit(void)
  * @param       bits_sample :位宽
  * @retval      无
  */
-void i2s_set_samplerate_bits_sample(int samplerate,int bits_sample)
+void i2s_set_samplerate_bits_sample(int samplerate, int bits_sample)
 {
-    i2s_set_clk(I2S_NUM,samplerate,bits_sample,I2S_CHANNEL_STEREO);
+    i2s_set_clk(I2S_NUM, samplerate, bits_sample, I2S_CHANNEL_STEREO);
 }
 
 /**
